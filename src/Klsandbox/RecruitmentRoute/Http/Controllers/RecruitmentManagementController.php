@@ -48,18 +48,14 @@ class RecruitmentManagementController extends Controller
             ->withRole($user->role);
     }
 
-    public function getListRecruitments($userId)
+    public function getListRecruitments(User $user)
     {
-        if (!Auth::user()->admin()) {
-            App::abort(500, 'Unauthorized');
-        }
-
         $start_date = new Carbon(date('Y-m-01'));
         $end_date = new Carbon(date('Y-m-01'));
         $end_date->endOfMonth();
 
-        $data = Recruitment::where('user_id', $userId)->orderBy('created_at', 'DESC')->get();
-        $data_month = Recruitment::where('user_id', $userId)
+        $data = Recruitment::where('user_id', $user->id)->orderBy('created_at', 'DESC')->get();
+        $data_month = Recruitment::where('user_id', $user->id)
             ->where('recruitments.created_at', '>=', $start_date)
             ->where('recruitments.created_at', '<=', $end_date)
             ->count();

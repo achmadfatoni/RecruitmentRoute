@@ -8,7 +8,7 @@
         'menu' => 'Settings',
     ], [
         'page' => 'list-recruitments',
-        'url' => 'list-recruitments/' . $auth->id,
+        'url' => 'list-recruitments/' . $auth->user->getRouteKey(),
         'menu' => 'List Recruitments',
     ]
 ]])
