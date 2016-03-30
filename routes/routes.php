@@ -9,7 +9,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/recruitment-management/settings', ['uses' => '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@getSettings']);
     Route::get('/recruitment-management/list-recruitments/{user}', ['uses' => '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@getListRecruitments']);
 
-    Route::group(['middleware' => ['auth.admin']], function () {
+    Route::group(['middleware' => ['role:admin']], function () {
         Route::get('leaderboard/top-recruitment-users/{filter}', '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@getTopRecruitmentUsers');
     });
 });
