@@ -1,23 +1,7 @@
 @extends('app')
 
 @section('page-header')
-
-    <h2>Recruitment Management</h2>
-
-    <div class="right-wrapper pull-right">
-        <ol class="breadcrumbs">
-            <li>
-                <a href="index.html">
-                    <i class="fa fa-home"></i>
-                </a>
-            </li>
-            <li><span>Recruitment Management</span></li>
-            <li><span>List Recruitments</span></li>
-
-        </ol>
-
-        <div class="sidebar-right-toggle"></div>
-    </div>
+    @include('elements.page-header', ['section_title' => 'Recruitment Management', 'page_title' => 'List Recruitments'])
 @endsection
 
 @section('content')
