@@ -2,7 +2,6 @@
 
 namespace Klsandbox\RecruitmentRoute\Http\Controllers;
 
-
 use App;
 use Klsandbox\RecruitmentRoute\Http\Requests\JoinPhonePostRequest;
 use Klsandbox\RecruitmentRoute\Models\Recruitment;
@@ -31,6 +30,7 @@ class RecruitmentManagementController extends Controller
     public function validator(array $data)
     {
         $id = Auth::user()->id;
+
         return \Validator::make($data, [
             'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id',
         ]);
@@ -59,7 +59,6 @@ class RecruitmentManagementController extends Controller
             ->where('recruitments.created_at', '<=', $end_date)
             ->count();
 
-
         return view('recruitment-route::list-recruitments')
             ->with('data', $data)
             ->with('data_month', $data_month);
@@ -77,6 +76,7 @@ class RecruitmentManagementController extends Controller
 
         if ($messages->messages()->count()) {
             Request::flashOnly('recruitment_key');
+
             return view('recruitment-route::settings')
                 ->withRole($user->role)
                 ->withErrors($messages);
@@ -129,7 +129,6 @@ class RecruitmentManagementController extends Controller
             ->with('data', $data);
     }
 
-
     public function getJoin($recruitment_key)
     {
         $users = User::where('recruitment_key', '=', $recruitment_key);
@@ -155,14 +154,14 @@ class RecruitmentManagementController extends Controller
         $recruitment = Recruitment::create([
             'name' => $user_hash,
             'phone_number' => Input::get('phone'),
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         NotificationRequest::create([
             'target_id' => $recruitment->id,
             'route' => 'recruitment-added',
             'channel' => 'Sms',
-            'to_user_id' => $user->id
+            'to_user_id' => $user->id,
         ]);
 
         User::createUserEvent($user, [

@@ -24,7 +24,7 @@ class JoinPhonePostRequest extends Request
     public function rules()
     {
         return [
-            'phone' => 'required|phone|min:7|max:20'
+            'phone' => 'required|phone|min:7|max:20',
         ];
     }
 }

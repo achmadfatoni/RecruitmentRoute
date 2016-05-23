@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ *
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereUpdatedAt($value)
@@ -30,12 +31,6 @@ class Recruitment extends Model
     protected $table = 'recruitments';
     public $timestamps = true;
     protected $fillable = [
-        'name', 'phone_number', 'user_id'
+        'name', 'phone_number', 'user_id',
     ];
-
 }
-
-
-
-
-
