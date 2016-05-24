@@ -29,11 +29,18 @@ class RecruitmentManagementController extends Controller
 
     public function validator(array $data)
     {
-        $id = Auth::user()->id;
+        $user = auth()->user();
+        $id = $user->id;
 
-        return \Validator::make($data, [
+        $rules = [
             'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id',
-        ]);
+
+        ];
+        if ($user->access()->dropship) {
+          $rules['recruitment_dropship_key'] = 'required|min:5|max:300|alpha_dash|unique:users,recruitment_dropship_key,' . $id . ',id';
+        }
+
+        return \Validator::make($data, $rules);
     }
 
     public function getSettings()
@@ -44,6 +51,7 @@ class RecruitmentManagementController extends Controller
 
         return view('recruitment-route::settings')
             ->with('recruitment_key', $user->recruitment_key)
+            ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
             ->withRole($user->role);
     }
 
@@ -79,15 +87,22 @@ class RecruitmentManagementController extends Controller
 
             return view('recruitment-route::settings')
                 ->withRole($user->role)
+                ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
                 ->withErrors($messages);
         }
         $user->recruitment_key = $recruitment_key;
+
+        if ($user->access()->dropship) {
+            $user->recruitment_dropship_key = Input::get('recruitment_dropship_key');
+        }
+
         $user->save();
 
         Session::flash('success_message', 'Recruitment key has been updated.');
 
         return view('recruitment-route::settings')
             ->with('recruitment_key', $user->recruitment_key)
+            ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
             ->withRole($user->role);
     }
 
