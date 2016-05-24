@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Input;
 use Klsandbox\NotificationService\Models\NotificationRequest;
+use Klsandbox\RoleModel\Role;
 use Klsandbox\SiteModel\Site;
 use Request;
 use Session;
@@ -144,20 +145,12 @@ class RecruitmentManagementController extends Controller
             ->with('data', $data);
     }
 
-    public function getJoin($recruitment_key)
+    public function getJoin($recruitment_key, $role)
     {
-        $users = User::where('recruitment_key', '=', $recruitment_key);
-
-        if ($users->count() != 1) {
-            App::abort(404, 'Recruitment Key not found');
-        }
-
-        $user = $users->first();
-
-        return view('recruitment-route::join')
-            ->withUser($user)
-            ->withRole($user->role)
-            ->with('recruitment_key', $recruitment_key);
+        if ($role->name == 'dropship') {
+            return $this->joinDropship($recruitment_key, $role);
+        };
+        return $this->joinStockist($recruitment_key, $role);
     }
 
     public function postPhone(JoinPhonePostRequest $request)
@@ -166,10 +159,17 @@ class RecruitmentManagementController extends Controller
         $user = User::findWithHash($user_hash);
         Site::protect($user);
 
+        $role = Role::findByName(Input::get('role'));
+
+        if (! $role) {
+            App::abort(404, 'Role not found');
+        }
+
         $recruitment = Recruitment::create([
             'name' => $user_hash,
             'phone_number' => Input::get('phone'),
             'user_id' => $user->id,
+            'role_id' => $role->id,
         ]);
 
         NotificationRequest::create([
@@ -186,5 +186,42 @@ class RecruitmentManagementController extends Controller
         ]);
 
         return back();
+    }
+
+    /**
+     * @param $recruitment_key
+     * @param $role
+     * @return mixed
+     */
+    public function joinStockist($recruitment_key, $role)
+    {
+        $users = User::where('recruitment_key', '=', $recruitment_key);
+
+        if ($users->count() != 1) {
+            App::abort(404, 'Recruitment Key not found');
+        }
+
+        $user = $users->first();
+
+        return view('recruitment-route::join')
+            ->withUser($user)
+            ->withRole($role)
+            ->with('recruitment_key', $recruitment_key);
+    }
+
+    private function joinDropship($recruitment_key, $role)
+    {
+        $users = User::where('recruitment_dropship_key', '=', $recruitment_key);
+
+        if ($users->count() != 1) {
+            App::abort(404, 'Recruitment Key not found');
+        }
+
+        $user = $users->first();
+
+        return view('recruitment-route::join_dropship')
+            ->withUser($user)
+            ->withRole($role)
+            ->with('recruitment_key', $recruitment_key);
     }
 }

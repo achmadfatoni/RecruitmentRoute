@@ -3,6 +3,7 @@
 namespace Klsandbox\RecruitmentRoute\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Klsandbox\RoleModel\Role;
 
 /* Klsandbox\RecruitmentRoute\Models\Recruitment
 *
@@ -31,6 +32,11 @@ class Recruitment extends Model
     protected $table = 'recruitments';
     public $timestamps = true;
     protected $fillable = [
-        'name', 'phone_number', 'user_id',
+        'name', 'phone_number', 'user_id', 'role_id'
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

@@ -68,15 +68,17 @@
                     <table class="{{isset($table_class) ? $table_class : 'table table-bordered table-striped table-condensed mb-none'}}">
                         <thead>
                         <tr>
-                            <th>Phone Number</th>
-                            <th>Created at</th>
+                            <th class="text-center">Phone Number</th>
+                            <th class="text-center">Created at</th>
+                            <th class="text-center">Role</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($data as $itm)
                             <tr>
                                 <td>{{ $itm->phone_number }}</td>
-                                <td>{{ $itm->created_at }}</td>
+                                <td>{{ $itm->created_at->format('d M Y') }}</td>
+                                <td>{{ ucfirst($itm->role->name) }}</td>
                             </tr>
                         @endforeach
                         </tbody>

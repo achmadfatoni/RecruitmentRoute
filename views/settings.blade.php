@@ -23,7 +23,7 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Recruitment Key</label>
+                            <label class="col-md-3 control-label">Recruitment Stockist Key</label>
 
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="recruitment_key"
@@ -58,7 +58,7 @@
                     </header>
                     <div class="panel-body">
                         <span class="amount reg-list-link"><a id="recruitment_link"
-                                                              href='{{ url('/join/' . $recruitment_key) }}'>{{ url('/join/' . $recruitment_key) }}</a></span>
+                                                              href='{{ url('/join/' . $recruitment_key .'/stockist') }}'>{{ url('/join/' . $recruitment_key .'/stockist') }}</a></span>
                     </div>
                 @endif
 
@@ -70,7 +70,7 @@
                     </header>
                     <div class="panel-body">
                         <span class="amount reg-list-link"><a id="recruitment_link"
-                                                              href='{{ url('/join/' . $recruitment_key) }}'>{{ url('/join/' . $recruitment_dropship_key) }}</a></span>
+                                                              href='{{ url('/join/' . $recruitment_dropship_key .'/dropship') }}'>{{ url('/join/' . $recruitment_dropship_key.'/dropship') }}</a></span>
                     </div>
                 @endif
 
