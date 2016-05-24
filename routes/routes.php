@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/join/{recruitment_key}/{role}', ['as' => 'recruitment.join', 'uses' => '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@getJoin']);
+Route::get('/join/{recruitment_key}', ['as' => 'recruitment.join', 'uses' => '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@getJoin']);
 Route::post('/join/phone', ['as' => 'recruitment.join', 'uses' => '\Klsandbox\RecruitmentRoute\Http\Controllers\RecruitmentManagementController@postPhone']);
 
 Route::group(['middleware' => ['auth']], function () {

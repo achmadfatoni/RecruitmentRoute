@@ -57,8 +57,11 @@
                         </h2>
                     </header>
                     <div class="panel-body">
-                        <span class="amount reg-list-link"><a id="recruitment_link"
-                                                              href='{{ url('/join/' . $recruitment_key .'/stockist') }}'>{{ url('/join/' . $recruitment_key .'/stockist') }}</a></span>
+                        <span class="amount reg-list-link">
+                            <a id="recruitment_link" href='{{ url('/join/' . $recruitment_key) }}'>
+                                {{ url('/join/' . $recruitment_key) }}
+                            </a>
+                        </span>
                     </div>
                 @endif
 
@@ -69,8 +72,11 @@
                         </h2>
                     </header>
                     <div class="panel-body">
-                        <span class="amount reg-list-link"><a id="recruitment_link"
-                                                              href='{{ url('/join/' . $recruitment_dropship_key .'/dropship') }}'>{{ url('/join/' . $recruitment_dropship_key.'/dropship') }}</a></span>
+                        <span class="amount reg-list-link">
+                            <a id="recruitment_link" href='{{ url('/join/' . $recruitment_dropship_key) }}'>
+                                {{ url('/join/' . $recruitment_dropship_key) }}
+                            </a>
+                        </span>
                     </div>
                 @endif
 
