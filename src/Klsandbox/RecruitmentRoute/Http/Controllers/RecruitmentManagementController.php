@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Input;
 use Klsandbox\NotificationService\Models\NotificationRequest;
+use Klsandbox\RoleModel\Role;
 use Klsandbox\SiteModel\Site;
 use Request;
 use Session;
@@ -29,11 +30,21 @@ class RecruitmentManagementController extends Controller
 
     public function validator(array $data)
     {
-        $id = Auth::user()->id;
+        $user = auth()->user();
+        $id = $user->id;
 
-        return \Validator::make($data, [
-            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id',
-        ]);
+        $rules = [
+            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist',
+
+        ];
+        if ($user->access()->dropship) {
+            $rules = [
+                'recruitment_key' => 'required|min:5|max:300|alpha_dash||different:recruitment_dropship_key|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist:'.$id,
+                'recruitment_dropship_key' => 'required|min:5|max:300|alpha_dash||different:recruitment_key|unique:users,recruitment_dropship_key,' . $id . ',id|recruitment_dropship:'.$id
+            ];
+        }
+
+        return \Validator::make($data, $rules);
     }
 
     public function getSettings()
@@ -44,6 +55,7 @@ class RecruitmentManagementController extends Controller
 
         return view('recruitment-route::settings')
             ->with('recruitment_key', $user->recruitment_key)
+            ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
             ->withRole($user->role);
     }
 
@@ -79,15 +91,22 @@ class RecruitmentManagementController extends Controller
 
             return view('recruitment-route::settings')
                 ->withRole($user->role)
+                ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
                 ->withErrors($messages);
         }
         $user->recruitment_key = $recruitment_key;
+
+        if ($user->access()->dropship) {
+            $user->recruitment_dropship_key = Input::get('recruitment_dropship_key');
+        }
+
         $user->save();
 
         Session::flash('success_message', 'Recruitment key has been updated.');
 
         return view('recruitment-route::settings')
             ->with('recruitment_key', $user->recruitment_key)
+            ->with('recruitment_dropship_key', $user->recruitment_dropship_key)
             ->withRole($user->role);
     }
 
@@ -131,18 +150,30 @@ class RecruitmentManagementController extends Controller
 
     public function getJoin($recruitment_key)
     {
-        $users = User::where('recruitment_key', '=', $recruitment_key);
 
-        if ($users->count() != 1) {
-            App::abort(404, 'Recruitment Key not found');
+        $findUser = User::where('recruitment_key', $recruitment_key)
+            ->orWhere('recruitment_dropship_key', $recruitment_key)
+            ->first();
+
+        if (! $findUser) {
+            App::abort(404, 'Recuitment key not found');
         }
 
-        $user = $users->first();
+        if ($findUser->recruitment_key == $recruitment_key) {
+            $role = Role::whereSiteId($findUser->site_id)
+                ->whereName('dropship')
+                ->first();
+        } else {
+            $role = Role::whereSiteId($findUser->site_id)
+                ->whereName('stockist')
+                ->first();
+        }
 
-        return view('recruitment-route::join')
-            ->withUser($user)
-            ->withRole($user->role)
-            ->with('recruitment_key', $recruitment_key);
+        if ($role->name == 'dropship') {
+            return $this->joinDropship($findUser, $recruitment_key, $role);
+        };
+
+        return $this->joinStockist($findUser, $recruitment_key, $role);
     }
 
     public function postPhone(JoinPhonePostRequest $request)
@@ -151,10 +182,17 @@ class RecruitmentManagementController extends Controller
         $user = User::findWithHash($user_hash);
         Site::protect($user);
 
+        $role = Role::findByName(Input::get('role'));
+
+        if (! $role) {
+            App::abort(404, 'Role not found');
+        }
+
         $recruitment = Recruitment::create([
             'name' => $user_hash,
             'phone_number' => Input::get('phone'),
             'user_id' => $user->id,
+            'role_id' => $role->id,
         ]);
 
         NotificationRequest::create([
@@ -171,5 +209,26 @@ class RecruitmentManagementController extends Controller
         ]);
 
         return back();
+    }
+
+    /**
+     * @param $recruitment_key
+     * @param $role
+     * @return mixed
+     */
+    public function joinStockist($user, $recruitment_key, $role)
+    {
+        return view('recruitment-route::join')
+            ->withUser($user)
+            ->withRole($role)
+            ->with('recruitment_key', $recruitment_key);
+    }
+
+    private function joinDropship($user, $recruitment_key, $role)
+    {
+        return view('recruitment-route::join_dropship')
+            ->withUser($user)
+            ->withRole($role)
+            ->with('recruitment_key', $recruitment_key);
     }
 }
