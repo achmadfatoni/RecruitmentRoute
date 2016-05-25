@@ -40,7 +40,7 @@ class RecruitmentManagementController extends Controller
         if ($user->access()->dropship) {
             $rules = [
                 'recruitment_key' => 'required|min:5|max:300|alpha_dash||different:recruitment_dropship_key|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist:'.$id,
-                'recruitment_dropship_key' => 'required|min:5|max:300|alpha_dash||different:recruitment_key|unique:users,recruitment_dropship_key,' . $id . ',id|recruitment_dropship:'.$id
+                'recruitment_dropship_key' => 'required|min:5|max:300|alpha_dash||different:recruitment_key|unique:users,recruitment_dropship_key,' . $id . ',id|recruitment_dropship:'.$id,
             ];
         }
 
@@ -150,12 +150,11 @@ class RecruitmentManagementController extends Controller
 
     public function getJoin($recruitment_key)
     {
-
         $findUser = User::where('recruitment_key', $recruitment_key)
             ->orWhere('recruitment_dropship_key', $recruitment_key)
             ->first();
 
-        if (! $findUser) {
+        if (!$findUser) {
             App::abort(404, 'Recuitment key not found');
         }
 
@@ -184,7 +183,7 @@ class RecruitmentManagementController extends Controller
 
         $role = Role::findByName(Input::get('role'));
 
-        if (! $role) {
+        if (!$role) {
             App::abort(404, 'Role not found');
         }
 
@@ -214,6 +213,7 @@ class RecruitmentManagementController extends Controller
     /**
      * @param $recruitment_key
      * @param $role
+     *
      * @return mixed
      */
     public function joinStockist($user, $recruitment_key, $role)

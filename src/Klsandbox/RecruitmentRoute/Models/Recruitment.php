@@ -26,13 +26,18 @@ use Klsandbox\RoleModel\Role;
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment wherePhoneNumber($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereUserId($value)
  * @mixin \Eloquent
+ *
+ * @property integer $role_id
+ * @property-read \Klsandbox\RoleModel\Role $role
+ *
+ * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereRoleId($value)
  */
 class Recruitment extends Model
 {
     protected $table = 'recruitments';
     public $timestamps = true;
     protected $fillable = [
-        'name', 'phone_number', 'user_id', 'role_id'
+        'name', 'phone_number', 'user_id', 'role_id',
     ];
 
     public function role()
