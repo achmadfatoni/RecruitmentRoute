@@ -34,8 +34,7 @@ class RecruitmentManagementController extends Controller
         $id = $user->id;
 
         $rules = [
-            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist',
-
+            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist:'.$id,
         ];
         if ($user->access()->dropship) {
             $rules = [
