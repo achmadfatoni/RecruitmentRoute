@@ -34,8 +34,7 @@ class RecruitmentManagementController extends Controller
         $id = $user->id;
 
         $rules = [
-            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist',
-
+            'recruitment_key' => 'required|min:5|max:300|alpha_dash|unique:users,recruitment_key,' . $id . ',id|recruitment_stockist:'.$id,
         ];
         if ($user->access()->dropship) {
             $rules = [
@@ -160,11 +159,11 @@ class RecruitmentManagementController extends Controller
 
         if ($findUser->recruitment_key == $recruitment_key) {
             $role = Role::whereSiteId($findUser->site_id)
-                ->whereName('dropship')
+                ->whereName('stockist')
                 ->first();
         } else {
             $role = Role::whereSiteId($findUser->site_id)
-                ->whereName('stockist')
+                ->whereName('dropship')
                 ->first();
         }
 
