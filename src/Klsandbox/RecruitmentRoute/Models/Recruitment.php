@@ -18,7 +18,6 @@ use Klsandbox\RoleModel\Role;
  * @property integer $user_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereUpdatedAt($value)
@@ -26,10 +25,8 @@ use Klsandbox\RoleModel\Role;
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment wherePhoneNumber($value)
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereUserId($value)
  * @mixin \Eloquent
- *
  * @property integer $role_id
  * @property-read \Klsandbox\RoleModel\Role $role
- *
  * @method static \Illuminate\Database\Query\Builder|\Klsandbox\RecruitmentRoute\Models\Recruitment whereRoleId($value)
  */
 class Recruitment extends Model
