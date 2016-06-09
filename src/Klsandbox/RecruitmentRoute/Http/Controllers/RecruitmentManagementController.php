@@ -48,8 +48,6 @@ class RecruitmentManagementController extends Controller
 
     public function getSettings()
     {
-        User::stockistGuard();
-
         $user = Auth::user();
 
         return view('recruitment-route::settings')
@@ -78,7 +76,6 @@ class RecruitmentManagementController extends Controller
     // Only admin can ship the order
     public function postSettings()
     {
-        User::stockistGuard();
         $user = Auth::user();
 
         $recruitment_key = Input::get('recruitment_key');
