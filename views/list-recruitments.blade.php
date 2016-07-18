@@ -77,7 +77,7 @@
                         @foreach($data as $itm)
                             <tr>
                                 <td>{{ $itm->phone_number }}</td>
-                                <td>{{ $itm->created_at->format('d M Y') }}</td>
+                                <td>{{ $itm->created_at && is_object($itm->created_at) ? $itm->created_at->format('d M Y') : '' }}</td>
                                 <td>{{ ucfirst($itm->role->name) }}</td>
                             </tr>
                         @endforeach
