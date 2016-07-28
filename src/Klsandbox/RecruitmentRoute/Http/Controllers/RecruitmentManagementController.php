@@ -12,7 +12,6 @@ use DB;
 use Input;
 use Klsandbox\NotificationService\Models\NotificationRequest;
 use Klsandbox\RoleModel\Role;
-use Klsandbox\SiteModel\Site;
 use Request;
 use Session;
 use App\Http\Controllers\Controller;
@@ -175,7 +174,6 @@ class RecruitmentManagementController extends Controller
     {
         $user_hash = Input::get('user_hash');
         $user = User::findWithHash($user_hash);
-        Site::protect($user);
 
         $role = Role::findByName(Input::get('role'));
 
