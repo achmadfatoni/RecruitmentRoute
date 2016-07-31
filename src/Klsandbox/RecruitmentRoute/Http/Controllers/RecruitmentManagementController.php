@@ -3,6 +3,7 @@
 namespace Klsandbox\RecruitmentRoute\Http\Controllers;
 
 use App;
+use App\Services\Site;
 use Klsandbox\RecruitmentRoute\Http\Requests\JoinPhonePostRequest;
 use Klsandbox\RecruitmentRoute\Models\Recruitment;
 use App\Models\User;
@@ -174,7 +175,7 @@ class RecruitmentManagementController extends Controller
     {
         $user_hash = Input::get('user_hash');
         $user = User::findWithHash($user_hash);
-
+        Site::protect($user, 'User');
         $role = Role::findByName(Input::get('role'));
 
         if (!$role) {
