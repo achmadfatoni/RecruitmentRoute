@@ -155,12 +155,10 @@ class RecruitmentManagementController extends Controller
         }
 
         if ($findUser->recruitment_key == $recruitment_key) {
-            $role = Role::whereSiteId($findUser->site_id)
-                ->whereName('stockist')
+            $role = Role::whereName('stockist')
                 ->first();
         } else {
-            $role = Role::whereSiteId($findUser->site_id)
-                ->whereName('dropship')
+            $role = Role::whereName('dropship')
                 ->first();
         }
 
